@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        To-Do List App
+    </title>
+    <script>
+        function addItem() {
+            var newItem = document.createElement("div"); 
+            newItem.innerHTML = document.getElementById("box").value; 
+            document.getElementById("list").appendChild(newItem);
+        }
+    </script>
+</head>
+<body>
+    <p>
+        Special Exhibition To-Do List
+    </p>
+    <br/>
+    <input type="text" id="box" value="Type here to add task"/> 
+    <br/>
+    <input type="button" value="Add item" onclick="addItem();"/>
+    <br/>
+    <div id="list">
+    </div>
+</body>
+</html>
