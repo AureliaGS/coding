@@ -33,7 +33,7 @@
     <br/>
     <input type="button" value="Add item" onclick="addItem();"/>
     <br/>
-    <input type="button" value="Load" onclick="loadList();"/>
+    <input type="button" value="load" onclick="loadList();"/>
     <div id="list">
     </div>
     

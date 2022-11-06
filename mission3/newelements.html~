@@ -7,12 +7,13 @@
     <script>
         function addItem() {
             var newItem = document.createElement("div");
-            newItem.innerHTML = "Something new!";
+            newItem.innerHTML = "New item";
             document.getElementById("list").appendChild(newItem);
         }
     </script>
 </head>
 <body>
-    <div id="list" onclick="addItem();">Click here to add item</div>
+    <div id="list" onclick="addItem();">Click here to add item
+    </div>
 </body>
 </html>
