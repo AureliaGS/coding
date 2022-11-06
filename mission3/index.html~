@@ -32,9 +32,8 @@
 	</script>
 </head>
 <body>
-	<div style="background-color:lightblue; padding:20px; text-align:center; font-size:48px ">
-	<img  src="VolkovLogo.jpg">
-	The House of Volkov
+	<div style="background-color:lightblue; padding:20px; text-align:center; font-size:48px;align-items:left ">
+	<img  src="VolkovLogo.jpg">The House of Volkov</p>
 	</div>
 	<div>
 	<br/>
