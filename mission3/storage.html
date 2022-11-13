@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Storage
+    </title>
+    <script>
+        function save() {
+            var newItem = document.getElementById("box").value;
+            localStorage.box = newItem;
+        }
+        function load() {
+            var savedDiv = document.getElementById("savedList");
+            savedDiv.innerHTML = localStorage.box;
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="box" value="Type here to add task"/>
+    <br/> 
+    <input type="button" id="save" value="Save" onclick="save();"/>
+    <br/>
+    <input type="button" id="load" value="Load" onclick="load();"/>
+    <br/>
+    Saved item: <div id="savedList">
+    </div>
+
+</body>
+</html>
