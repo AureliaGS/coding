@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        terulet
+    </title>
+    <script>
+        function calc() {
+            var length = document.getElementById("lbox").value;
+            var width = document.getElementById("wbox").value;   
+            var kerulet = 2*length + 2*width;
+            var terulet = length*width;
+            alert("Kerulet is "+kerulet+" and Terulet is "+terulet);
+        }
+    </script>
+</head>
+<body>
+    <p>
+        kerulet & terulet calculator
+    </p>
+    <br/>
+    <p>
+        Enter the length here
+    </p>
+    <input type="int" id="lbox" /> 
+    <br/>
+    <p>
+        Enter the width here
+    </p>
+    <input type="int" id="wbox" /> 
+    <br/>
+    <input type="button" value="calculate" onclick="calc();"/>
+    <br/>
+</body>
+</html>
