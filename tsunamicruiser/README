@@ -1,0 +1,27 @@
+------------------------------------------------------------------------
+JGAME.JS 0.4 20140922 - a Javascript/WebGL engine for 2D games
+Copyright (c) 2014 by Boris van Schooten  tmtg.net  boris@13thmonkey.org
+Released under BSD license. See LICENSE for details.
+------------------------------------------------------------------------
+
+jgame.js is a revised port of JGame, a multiplatform Java engine for 2D
+games (http://www.13thmonkey.org/~boris/jgame/).
+
+jgame.js consists of the following components:
+
+gl.js - basic WebGL functions
+gldraw.js - draw functions (note: shader code is found in index.html)
+jgengine.js - screen, input events, game states
+jgobject.js - game object handling
+jgtiles.js - tile handling
+jgaudio.js - audio handling
+jgmenu.js - menu system
+
+The current implementation is a fairly complete rendition of the JGame API,
+but still has a number of issues. Such as:
+
+- some hard-coded references to globals
+- no nice directory structure
+
+This version is packaged with a full example game, Tsunami Cruiser.
+
