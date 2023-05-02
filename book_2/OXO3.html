@@ -36,6 +36,7 @@
         <script> 
             var aktualisJatekos = "O";
             function hely(doboz) {
+                if(doboz.innerText != "") return;
                 doboz.innerText = aktualisJatekos;
                 if(aktualisJatekos == "O") {
                     aktualisJatekos = "X";
