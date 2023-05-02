@@ -34,8 +34,15 @@
         <div onclick="hely(this)"></div>
     </div>
         <script> 
+            var aktualisJatekos = "O";
             function hely(doboz) {
-                alert("Ide kattintottál!");
+                doboz.innerText = aktualisJatekos;
+                if(aktualisJatekos == "O") {
+                    aktualisJatekos = "X";
+                }
+                else {
+                    aktualisJatekos = "O";
+                }
             }
         </script>
 
