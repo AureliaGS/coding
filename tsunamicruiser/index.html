@@ -1,0 +1,319 @@
+<html>
+<!-- (C) 2014 by Boris van Schooten tmtg.net boris@13thmonkey.org -->
+<head>
+<title>Tsunami Cruiser</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+<script type="text/javascript" src="jgengine.js"></script>
+<script type="text/javascript" src="jgobject.js"></script>
+<script type="text/javascript" src="jgaudio.js"></script>
+<script type="text/javascript" src="gl.js"></script>
+<script type="text/javascript" src="gldraw.js"></script>
+
+<script type="text/javascript" src="waves.js"></script>
+<script type="text/javascript" src="bubbles.js"></script>
+<script type="text/javascript" src="explo.js"></script>
+<script type="text/javascript" src="vectorfont.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="jgmenu.js"></script>
+<style>
+
+/*http://stackoverflow.com/questions/17506469/how-to-make-html5-canvas-full-page-size-with-cocos2d*/
+
+* { margin:0; padding:0; } /* to remove the top and left whitespace */
+html, body { width:100%; height:100%; } /* just to be sure these are full screen*/
+canvas { display:block; cursor:none; } /* To remove the scrollbars */
+</style>
+
+<!-- to be used with linestrip-fs -->
+<script id="linesegmentstrip-vs" type="x-shader/x-vertex">
+// NOTE: assuming butt caps and miter joins
+precision mediump float;
+#define M_PI 3.1415926535897932384626433832795
+uniform vec2 uScale;// scale of object relative to aPos
+uniform float uObjScale;
+uniform float uThickness;
+uniform vec2 uOffset;
+uniform float uAngle;
+
+attribute vec2 aPos;
+attribute vec2 aNorm1; // normal vector of line segment
+attribute float aDir; // -1 or 1
+
+varying float vThickOfs; // offset along thickness (-1 ... 1)
+
+void main(void) {
+	// normalize here to save CPU
+	vec2 norm1 = normalize(aNorm1);
+	vThickOfs = aDir;
+	vec2 pos = uObjScale*aPos
+	         + uThickness*norm1;
+	pos = vec2(
+		pos.x*cos(uAngle) - pos.y*sin(uAngle),
+		pos.x*sin(uAngle) + pos.y*cos(uAngle)
+	);
+	pos += uOffset;
+	gl_Position = vec4(
+		-1.0 + 2.0*pos.x/uScale.x,
+		 1.0 - 2.0*pos.y/uScale.y,
+		0.0, 1.0);
+}
+</script>
+
+
+<script id="linestrip-vs" type="x-shader/x-vertex">
+// NOTE: assuming butt caps and miter joins
+precision mediump float;
+#define M_PI 3.1415926535897932384626433832795
+uniform vec2 uScale;// scale of object relative to aPos
+uniform float uObjScale;
+uniform float uThickness;
+uniform vec2 uOffset;
+uniform float uAngle;
+
+attribute vec2 aPos;
+attribute vec2 aNorm1; // normal vector of previous line segment
+attribute vec2 aNorm2; // normal vector of next line segment
+attribute float aDir; // -1 or 1
+
+varying float vThickOfs; // offset along thickness (-1 ... 1)
+
+void main(void) {
+	// normalize here to save CPU
+	vec2 norm1 = normalize(aNorm1);
+	vec2 norm2 = normalize(aNorm2);
+	// angle between the two norm vectors
+	// http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/
+	// NOTE: due to rounding errors, may sometimes be slightly > 1,
+	// therefore we must multiply with slightly < 1.
+	float angle = acos(dot(norm1,norm2)*0.9999);
+	//if (angle < 0.0) angle = 0.0;
+	//float angle = atan(norm1.y,norm1.x) - atan(norm2.y,norm2.x);
+	//if (angle1 > 0.0) angle = -angle;
+	// avoid very long miter joins
+	//if (angle > M_PI-0.8) angle = M_PI-0.8;
+	//if (angle < -M_PI+0.8) angle = -M_PI+0.8;
+	// The norms are used to determine point offset for given line thickness.
+	// Direction of offset is the average of the norms.
+	// Magnitude depends on angle between norms:
+	// angle = 0 -> magnitude = thickness
+	// angle = PI -> magnitude -> infinity
+	vThickOfs = aDir;
+	vec2 pos = uObjScale*aPos
+	         + uThickness*( normalize(norm1+norm2) / cos(0.5*angle) );
+	pos = vec2(
+		pos.x*cos(uAngle) - pos.y*sin(uAngle),
+		pos.x*sin(uAngle) + pos.y*cos(uAngle)
+	);
+	pos += uOffset;
+	gl_Position = vec4(
+		-1.0 + 2.0*pos.x/uScale.x,
+		 1.0 - 2.0*pos.y/uScale.y,
+		0.0, 1.0);
+}
+</script>
+
+<script id="linestrip-fs" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec4 uColor;
+
+varying float vThickOfs;
+
+void main(void) {
+	vec4 color = uColor;
+	float thick2 = vThickOfs*vThickOfs;
+	color.a = 1.0 - thick2*thick2;
+	//float thick2 = sqrt(sqrt(abs(vThickOfs)));
+	//color.a = 1.5 - 1.5*thick2;
+	//if (color.a > 0.5) color += 2.0*(color.a-0.5);// else discard;
+	gl_FragColor = color;
+}
+</script>
+
+
+
+<script id="simplelinestrip-vs" type="x-shader/x-vertex">
+// NOTE: assuming butt caps and miter joins
+precision mediump float;
+#define M_PI 3.1415926535897932384626433832795
+uniform vec2 uScale;// scale of object relative to aPos
+uniform float uObjScale;
+uniform float uThickness;
+uniform vec2 uOffset;
+uniform float uAngle;
+
+attribute vec2 aPos;
+attribute vec4 aNorm1; // normal vector of previous line segment
+//attribute vec2 aNorm2; // normal vector of next line segment
+//attribute float aDir; // -1 or 1
+
+//varying float vThickOfs; // offset along thickness (-1 ... 1)
+
+void main(void) {
+	// normalize here to save CPU
+	vec2 norm1 = normalize(vec2(aNorm1.x,aNorm1.y));
+	vec2 norm2 = normalize(vec2(aNorm1.z,aNorm1.w));
+	// angle between the two norm vectors
+	// http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/
+	float angle = acos(dot(norm1,norm2));
+	// avoid very long miter joins
+	if (angle > M_PI-0.8) angle = M_PI-0.8;
+	if (angle < -M_PI-0.8) angle = -M_PI-0.8;
+	// The norms are used to determine point offset for given line thickness.
+	// Direction of offset is the average of the norms.
+	// Magnitude depends on angle between norms:
+	// angle = 0 -> magnitude = thickness
+	// angle = PI -> magnitude -> infinity
+	//vThickOfs = aDir;
+	vec2 pos = uObjScale*aPos
+	         + uThickness*( normalize(norm1+norm2) / cos(0.5*angle) );
+	pos = vec2(
+		pos.x*cos(uAngle) - pos.y*sin(uAngle),
+		pos.x*sin(uAngle) + pos.y*cos(uAngle)
+	);
+	pos += uOffset;
+	gl_Position = vec4(
+		-1.0 + 2.0*pos.x/uScale.x,
+		 1.0 - 2.0*pos.y/uScale.y,
+		0.0, 1.0);
+}
+</script>
+
+<script id="simplelinestrip-fs" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec4 uColor;
+
+//varying float vThickOfs;
+
+void main(void) {
+	//vec4 color = uColor;
+	//float thick2 = vThickOfs*vThickOfs;
+	//color.a = 1.0 - thick2*thick2;
+	gl_FragColor = uColor;
+}
+</script>
+
+
+
+
+
+
+
+
+<script id="bubble-vs" type="x-shader/x-vertex">
+precision mediump float;
+#define M_PI 3.1415926535897932384626433832795
+uniform vec2 uScale;
+
+attribute vec2 aPos;
+attribute float aNr; // point # (0...2)
+attribute float aSize; // size of bubble
+attribute float aType; // 0 = bubble, 1 = foam
+
+varying float vType; // 0 = bubble, 1 = foam
+varying vec3 vTrianglePos;
+
+void main(void) {
+	vec2 pos = aPos;
+	pos.x += aSize*sin(0.666666*M_PI*aNr);
+	pos.y += aSize*cos(0.666666*M_PI*aNr);
+	gl_Position = vec4(
+		-1.0 + 2.0*pos.x/uScale.x,
+		 1.0 - 2.0*pos.y/uScale.y,
+		0.0, 1.0);
+	if (aNr==0.0) {
+		vTrianglePos = vec3(1.0,0.0,0.0);
+	} else if (aNr==1.0) {
+		vTrianglePos = vec3(0.0,1.0,0.0);
+	} else {
+		vTrianglePos = vec3(0.0,0.0,1.0);
+	}
+	vType = aType;
+}
+</script>
+
+<script id="bubble-fs" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec4 uColor;
+
+varying float vType; // 0 = bubble, 1 = foam
+varying vec3 vTrianglePos;
+
+void main(void) {
+
+	float bright = 5.2-10.2*(vTrianglePos.x*vTrianglePos.x+vTrianglePos.y*vTrianglePos.y+vTrianglePos.z*vTrianglePos.z);
+	if (bright<=0.0) discard;
+	if (vType==0.0 && bright > 1.4) discard;
+	bright = clamp(bright,0.0,1.0);
+
+	gl_FragColor = bright*uColor;
+}
+</script>
+
+
+
+
+
+
+
+<script id="simpleline-vs" type="x-shader/x-vertex">
+precision mediump float;
+uniform vec2 uScale;
+attribute vec2 aPos;
+
+void main(void) {
+	gl_Position = vec4(
+		-1.0 + 2.0*aPos.x/uScale.x,
+		 1.0 - 2.0*aPos.y/uScale.y,
+		0.0, 1.0);
+}
+</script>
+
+<script id="simpleline-fs" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec4 uColor;
+
+void main(void) {
+	gl_FragColor = uColor;
+}
+</script>
+
+
+
+<script id="gradientline-vs" type="x-shader/x-vertex">
+precision mediump float;
+uniform vec2 uScale;
+attribute vec2 aPos;
+attribute vec4 aColor;
+
+varying vec4 vColor;
+
+void main(void) {
+	gl_Position = vec4(
+		-1.0 + 4.0*aPos.x/uScale.x,
+		 1.0 - 2.0*aPos.y/uScale.y,
+		0.0, 1.0);
+	vColor = aColor;
+}
+</script>
+
+<script id="gradientline-fs" type="x-shader/x-fragment">
+precision mediump float;
+
+varying vec2 vLinePos;
+varying vec4 vColor;
+
+void main(void) {
+	gl_FragColor = vec4(1.0,1.0,1.0,1.0);
+}
+</script>
+
+
+</head>
+
+
+<body onload="webGLStart();">
+<canvas id="game-canvas" style="border: none; width: 100px; height: 100px;"></canvas>
+</body>
+
+</html>
