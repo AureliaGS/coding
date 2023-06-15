@@ -43,16 +43,9 @@
             }
             function jatekTablaEllenorzes() {
                 for (var i = 0; i <= 2; i++) {
-                    var elso     = document.getElementById("0_"+i).innerText;
-                    var masodik  = document.getElementById("1_"+i).innerText;
-                    var harmadik = document.getElementById("2_"+i).innerText;
-                    if(elso == "") continue;
-                    if(elso == masodik && masodik == harmadik) {
-                        alert("Gyoztes!");
-                    }    
-                }
-            }
-                for (var i = 0; i <= 2; i++) {
+                    var elso     = document.getElementById("0_"+ i).innerText;
+                    var masodik  = document.getElementById("1_"+ i).innerText;
+                    var harmadik = document.getElementById("2_"+ i).innerText;
                     var elso     = document.getElementById(i + "_0").innerText;
                     var masodik  = document.getElementById(i + "_1").innerText;
                     var harmadik = document.getElementById(i + "_2").innerText;
@@ -60,19 +53,17 @@
                     if(elso == masodik && elso == harmadik) {
                         alert("Gyoztes!");
                     }
+                    var elsoAtlo1     =document.getElementById("0_0").innerText;
+                    var masodikAtlo1  =document.getElementById("1_1").innerText;
+                    var harmadikAtlo1 =document.getElementById("2_2").innerText;  
+                    var elsoAtlo2     =document.getElementById("0_2").innerText;
+                    var masodikAtlo2  =document.getElementById("1_1").innerText;
+                    var harmadikAtlo2 =document.getElementById("2_0").innerText;
+                    if(elsoAtlo2 != "" && elsoAtlo2 == masodikAtlo2 && elsoAtlo2 == harmadikAtlo2) {
+                        alert("Gyoztes!");
+                    }   
                 }
-                var elsoAtlo1     =document.getElementById("0_0").innerText;
-                var masodikAtlo1  =document.getElementById("1_1").innerText;
-                var harmadikAtlo1 =document.getElementById("2_2").innerText;
-                if(elsoAtlo1 != "" && elsoAtlo1 == masodikAtlo1 && elsoAtlo1 == harmadikAtlo1) {
-                    alert("Gyoztes!");
-                }  
-                var elsoAtlo2     =document.getElementById("0_2").innerText;
-                var masodikAtlo2  =document.getElementById("1_1").innerText;
-                var harmadikAtlo2 =document.getElementById("2_0").innerText;
-                if(elsoAtlo2 != "" && elsoAtlo2 == masodikAtlo2 && elsoAtlo2 == harmadikAtlo2) {
-                    alert("Gyoztes!");
-                }
+            }
         </script>
 
 </body>
