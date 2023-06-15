@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic-Tac-Toe</title>
+    <style>
+        .sor div {
+            padding: 10px;
+            border: 1px solid black;
+            height: 30px;
+            width: 30px;
+            float: left;
+        }
+        .sor {
+            clear:both;
+        }
+    </style>
+</head>
+<body>
+    A játék indításához kattints ide!<br/>
+    <div>
+    <div class="sor">
+        <div id="0_0" onclick="hely(this)"></div>
+        <div id="1_0" onclick="hely(this)"></div>
+        <div id="2_0" onclick="hely(this)"></div>
+    </div>
+    <div class="sor">
+        <div id="0_1" onclick="hely(this)"></div>
+        <div id="1_1" onclick="hely(this)"></div>
+        <div id="2_1" onclick="hely(this)"></div>
+    </div> 
+    <div class="sor">
+        <div id="0_2" onclick="hely(this)"></div>
+        <div id="1_2" onclick="hely(this)"></div>
+        <div id="2_2" onclick="hely(this)"></div>
+    </div>
+        <script> 
+            var aktualisJatekos = "O";
+            function hely(doboz) {
+                if(doboz.innerText != "") return;
+                doboz.innerText = aktualisJatekos;
+                aktualisJatekos == "O" ? aktualisJatekos = "X" : aktualisJatekos = "O";
+                jatekTablaEllenorzes();
+            }
+            function jatekTablaEllenorzes() {
+                var elso = document.getElementById("0_0").innerText;
+                var masodik = document.getElementById("1_0").innerText;
+                var harmadik = document.getElementById("2_0").innerText;
+                if(elso == "") return;
+                if(elso == masodik && masodik == harmadik) {
+                    alert("Gyoztes!");
+                }
+            }
+        </script>
+
+</body>
+
+</html>
