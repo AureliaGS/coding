@@ -37,13 +37,12 @@
             var aktualisJatekos = "O";
             var gyozelem = false;
             function hely(doboz) {
-                if(doboz.innerText != "" || gyozelem) return;
                 doboz.innerText = aktualisJatekos;
                 aktualisJatekos == "O" ? aktualisJatekos = "X" : aktualisJatekos = "O";
                 jatekTablaEllenorzes();
+                if(doboz.innerText != "" || gyozelem) return;
             }
             function jatekTablaEllenorzes() {
-
                 for (var i = 0; i <= 2; i++) {
                     // check horizontal rows
                     gyoztessEllenorzes(
