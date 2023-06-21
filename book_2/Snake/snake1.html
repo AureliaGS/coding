@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Snake</title>
+    </head>
+    <body>
+        <canvas id="canvas" width="1024" height="1024"></canvas>
+        <script>
+            var tabla = [
+                "###############",
+                "#             #",
+                "#             #",
+                "#             #",
+                "#     ####    #",
+                "#     ####    #",
+                "#             #",
+                "#             #",
+                "#             #",
+                "###############"
+            ];
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+            var aktualisYoffset = 0;
+            var negyzetMeret = 30;
+            // tabla.forEach(function soresellenorzes(sor) {
+            //     sor = sor.split("");
+            //     var aktualisXoffset = 0;
+            //     sor.forEach(function karakterEllenorzes(karakter) {
+            //         if(karakter == "#") {
+            //             ctx.fillStyle = "black";
+            //             ctx.fillRect(aktualisXoffset, aktualisYoffset, negyzetMeret, negyzetMeret);
+            //         }
+            //         actualisXoffset += negyzetMeret;
+            //     });
+            //     aktualisYoffset += negyzetMeret;
+            // });
+            tabla.forEach(function sorEllenorzes(sor){
+                sor = sor.split("");
+                var aktualisXoffset = 0;
+                sor.forEach(function karakterEllenorzes(karakter){
+                    if(karakter == "#") {
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(aktualisXoffset, aktualisYoffset, negyzetMeret, negyzetMeret);
+                    }
+                    aktualisXoffset += negyzetMeret;
+                });
+                aktualisYoffset += negyzetMeret;
+            });
+        </script>
+    </body>
+</html>
