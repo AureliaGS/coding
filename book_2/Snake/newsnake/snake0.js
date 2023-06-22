@@ -33,6 +33,8 @@ var grafika = {
         });
     }
 };
+
+
 grafika.tablaMegrajzolas();
 
 
