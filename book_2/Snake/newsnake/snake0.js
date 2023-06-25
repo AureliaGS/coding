@@ -12,6 +12,14 @@ var jatek = {
     "###############"
     ]
 };
+var kigyo = {
+        reszek: [
+            {x: 4, y: 2},
+            {x: 3, y: 2},
+            {x: 2, y: 2}
+        ],
+        irany: "E"
+};
 
 var grafika = {
     canvas: document.getElementById("canvas"),
@@ -31,7 +39,16 @@ var grafika = {
             });
             aktualisYoffset += grafika.negyzetMeret;
         });
-    }
+    },
+    kigyoMegrajzolas: function() {
+        var ctx = grafika.canvas.getContext("2d");
+        kigyo.reszek.forEach(function reszMegrajzolas(resz) {
+            var reszXhelye = resz.x * grafika.negyzetMeret;
+            var reszYhelye = resz.y * grafika.negyzetMeret;
+            ctx.fillStyle = "green";
+            ctx.fillRect(reszXhelye, reszYhelye, grafika.negyzetMeret,grafika.negyzetMeret);
+        })
+    } 
 };
 
 
