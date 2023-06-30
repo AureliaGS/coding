@@ -24,7 +24,7 @@ var kigyo = {
 var grafika = {
     canvas: document.getElementById("canvas"),
     negyzetMeret: 30,
-    tablaMegrajzolas: function() {
+    tablaMegrajzolas: function(ctx) {
         var aktualisYoffset = 0;
         jatek.tabla.forEach(function sorEllenorzes(sor) {
             sor = sor.split("");
@@ -50,12 +50,11 @@ var grafika = {
     },
     jatekMegrajzolas: function() {
         var ctx = grafika.canvas.getContext("2d");
-        grafika.tablaMegrajzolas();
-        grafika.kigyoMegrajzolas();
+        grafika.tablaMegrajzolas(ctx);
+        grafika.kigyoMegrajzolas(ctx);
     }
 };
-grafika.tablaMegrajzolas();
-grafika.kigyoMegrajzolas();
+grafika.jatekMegrajzolas();
 
 
 
